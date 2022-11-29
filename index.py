@@ -1,5 +1,6 @@
 import csv
 
+# Reading CSV file
 first_r = True
 Head = []
 d = []
@@ -7,14 +8,9 @@ with open('Student_marks_list.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
 
-        # This if statement is used for separate the title row in separate list
-
         if first_r:
             Head = row
             first_r = False
-
-
-# And this part is the calculation of total marks happened ,and append the marks and total in same list
         else:
             temp = [row[0]]
             total = 0
@@ -25,61 +21,60 @@ with open('Student_marks_list.csv', 'r') as file:
             d.append(temp)
 
 
-# This part contains the step of finding topper in each subject
-maxMath = [0, 0]
-maxBio = [0, 0]
-maxEng = [0, 0]
-maxPhy = [0, 0]
-maxChem = [0, 0]
-maxHindi = [0, 0]
-for i in range(len(d)):
-        if d[i][1] > maxMath[0]:
-            maxMath[0] = d[i][1]
-            maxMath[1] = d[i][0]
-        if d[i][2] > maxBio[0]:
-            maxBio[0] = d[i][2]
-            maxBio[1] = d[i][0]
-        if d[i][3] > maxEng[0]:
-            maxEng[0] = d[i][3]
-            maxEng[1] = d[i][0]
-        if d[i][4] > maxPhy[0]:
-            maxPhy[0] = d[i][4]
-            maxPhy[1] = d[i][0]
-        if d[i][5] > maxChem[0]:
-            maxChem[0] = d[i][5]
-            maxChem[1] = d[i][0]
-        if d[i][6] > maxHindi[0]:
-            maxHindi[0] = d[i][6]
-            maxHindi[1] = d[i][0]
-print("Topper in Maths is {}".format(maxMath[1]))
-print("Topper in Biology is {}".format(maxBio[1]))
-print("Topper in English is {}".format(maxEng[1]))
-print("Topper in Physics is {}".format(maxPhy[1]))
-print("Topper in Chemistry is {}".format(maxChem[1]))
-print("Topper in Hindi is {}".format(maxHindi[1]))
+# Function for finding topper in each subject
+def findTopper(rankList, subject_name):
+    subject_index = {
+        'Maths': 1,
+        'Biology': 2,
+        'English': 3,
+        'Physics': 4,
+        'Chemistry': 5,
+        'Hindi': 6
+    }
+    maxMark = [rankList[0]]
+    for i in range(1, len(rankList)):
+        index = subject_index[subject_name]
+        if rankList[i][index] > maxMark[0][index]:
+            maxMark = [rankList[i]]
+        elif rankList[i][index] == maxMark[0][index]:
+            maxMark.append(rankList[i])
+
+    name = ""
+    for i in range(0, len(maxMark)):
+        name += maxMark[i][0] + ' '
+    return "Topper in {} {} {}".format(subject_name, "are" if len(maxMark) > 1 else 'is', name)
 
 
-# This part contains top 3 students in a csv file
+# Function for finding top three students
+def topThree(rank):
+    first = [0, 0]
+    second = [0, 0]
+    third = [0, 0]
 
-f = [0, 0]
-s = [0, 0]
-t = [0, 0]
-
-for i in range(len(d)):
-    if d[i][7] > t[0]:
-        if d[i][7] > s[0]:
-            if d[i][7] > f[0]:
-                s[0] = f[0]
-                s[1] = f[1]
-                f[0] = d[i][7]
-                f[1] = d[i][0]
+    for j in range(len(rank)):
+        if rank[j][7] > third[0]:
+            if rank[j][7] > second[0]:
+                if rank[j][7] > first[0]:
+                    second[0] = first[0]
+                    second[1] = first[1]
+                    first[0] = rank[j][7]
+                    first[1] = rank[j][0]
+                else:
+                    third[0] = second[0]
+                    third[1] = second[1]
+                    second[0] = rank[j][7]
+                    second[1] = rank[j][0]
             else:
-                t[0] = s[0]
-                t[1] = s[1]
-                s[0] = d[i][7]
-                s[1] = d[i][0]
-        else:
-            t[0] = d[i][7]
-            t[1] = d[i][0]
+                third[0] = rank[j][7]
+                third[1] = rank[j][0]
 
-print("\nBest students in the class are {}, {}, {} ".format(f[1], s[1], t[1]))
+    return "\nBest students in the class are {}, {}, {} ".format(first[1], second[1], third[1])
+
+
+print(findTopper(d, 'Maths'))
+print(findTopper(d, 'Biology'))
+print(findTopper(d, 'English'))
+print(findTopper(d, 'Physics'))
+print(findTopper(d, 'Chemistry'))
+print(findTopper(d, 'Hindi'))
+print(topThree(d))
