@@ -78,3 +78,6 @@ print(findTopper(d, 'Physics'))
 print(findTopper(d, 'Chemistry'))
 print(findTopper(d, 'Hindi'))
 print(topThree(d))
+
+# Time complexity: o(n)
+# Space complex: best case o(1) worst case o(n)
